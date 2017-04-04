@@ -175,8 +175,8 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
 
   # commands_factofile schreiben
   writeLines(c(paste('factoval(file_in = ','"',wd,NBchar,'/PEST_Para.txt",',sep=""),
-             paste('file_out = "C:/PublicData/Drau/KAL/',NBchar,'/input/PEST_Paraload.txt",',sep=""),
-             paste('transferfile = "C:/PublicData/Drau/PEST/Baseparameters.txt",',sep=""),
+             paste('file_out = "',wd,NBchar,'/input/PEST_Paraload.txt",',sep=""),
+             paste('transferfile = "',transferfile,'",',sep=""),
              paste("NB=",NB,",",sep=""),
              paste("upriverNB=c(",factofileNB,"))",sep="")),
              con=paste(wd,NBchar,"/commands_factofile.txt",sep=""))
