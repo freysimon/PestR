@@ -222,7 +222,7 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
                paste('"', changeSlash(rscript) , '" ',
                      '"',changeSlash(wd),NBchar,'\\commands_kge_nse.txt"',sep="")
               ),
-              con=paste(wd,NBchar,"/COSERO_singlerun.bat",sep="")
+              con=paste(wd,NBchar,"/COSERO_single_run.bat",sep="")
              )
 
   # commands_factofile schreiben
