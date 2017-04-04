@@ -5,7 +5,7 @@
 Calculate both KGE and NSE of a time series.
 }
 \description{
-Calculate both Kling-Gutpa model efficiency (\link{kge}), and Nash-Sutcliffe model efficiency (\link{nse}) from an extended time series (\link{xts}) and return the negative value
+Calculate both Kling-Gutpa model efficiency (\link{KGE}), and Nash-Sutcliffe model efficiency (\link{NSE}) from an extended time series (\link{xts}) and return the negative value
 }
 \usage{
 kge_nse(x, simcol=2,
@@ -35,8 +35,9 @@ If OUT is given, the negative values of KGE and NSE are written whithout column-
 A data.frame containing the KGE and NSE value.
 }
 \references{
-Nash, J. E. and J. V. Sutcliffe (1970), River flow forecasting through conceptual models part I -A discussion of principles, Journal of Hydrology, 10 (3), 282-290
-Gupta, Hoshin V., Harald Kling, Koray K. Yilmaz, Guillermo F. Martinez. Decomposition of the mean squared error and NSE performance criteria: Implications for improving hydrological modelling. Journal of Hydrology, Volume 377, Issues 1-2, 20 October 2009, Pages 80-91. DOI: 10.1016/j.jhydrol.2009.08.003. ISSN 0022-1694
+\emph{Nash, J. E. and J. V. Sutcliffe (1970), River flow forecasting through conceptual models part I -A discussion of principles, Journal of Hydrology, 10 (3), 282-290}
+
+\emph{Gupta, Hoshin V., Harald Kling, Koray K. Yilmaz, Guillermo F. Martinez. Decomposition of the mean squared error and NSE performance criteria: Implications for improving hydrological modelling. Journal of Hydrology, Volume 377, Issues 1-2, 20 October 2009, Pages 80-91. DOI: 10.1016/j.jhydrol.2009.08.003.}
 }
 \author{
 Simon Frey
@@ -50,6 +51,7 @@ Simon Frey
 \seealso{
 \link{KGE}
 \link{NSE}
+\link{readcosero}
 }
 \examples{
 ### load sample output data from cosero
