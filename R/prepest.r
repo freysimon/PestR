@@ -18,16 +18,17 @@
 # optimierten Parameter (z.B. von früheren Läufen)        #
 # enthält. Dies ist sinnvoll, falls das Skript Teil eines #
 # Batchfiles ist und ein Flußgebiet Schritt für Schritt   #
-# kalibriert werden soll                                  #
+# kalibriert werden soll (im Moment nicht in verwendung)  #
 #                                                         #
-# BASEPAR bezeichnet die Datei mit den Ausgangsparametern #
+# transferfile bezeichnet die Datei mit den               #
+# Ausgangsparametern.                                     #
 # Für weiter flußabgelegene Subeinzugsgebiete sollte      #
-# BASEPAR aktualisert werden, da sonst die obengelgenen   #
-# Gebiete mit nicht-optimierten Parametern berchentet     #
-# werden.                                                 #
+# transferfile aktualisert werden, da sonst die           #
+# obengelgenen Gebiete mit nicht-optimierten Parametern   #
+# berchentet werden.                                      #
 #                                                         #
 # Autor: Simon Frey                                       #
-# Version: 1.2                                            #
+# Version: 1.4                                            #
 # Datum: November 2016                                    #
 #                                                         #
 ###########################################################
@@ -35,8 +36,8 @@
 prepest <- function(NB, upriverNB=NA, wd = getwd(),
                     updateparasofar=FALSE,transferfile=NULL,
                     placeholders = NULL,
-                    tempchek, pestgen,
-                    lb = 0.3, ub = 3.0){
+                    tempchek, pestgen, file_in, file_out,
+                    file_objfunc = "kge_nse.txt", lb = 0.3, ub = 3.0){
 
   # Letzte n Buchstaben eines Characters auswerten
   substrRight <- function(x, n){
@@ -55,6 +56,48 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
   changeSlash <- function(x){
     gsub("/","\\",x,fixed = TRUE)
   }
+
+  # check whether a path is absolute
+  is.abs <- function(x){
+    x <- substr(x,2,2)
+    if(x == ":"){
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  }
+
+
+  # Add or remove the path-part from a string
+  # eg. add "C:/Temp/" to "testfle.txt" and return
+  # "C:/Temp/testfile.txt"
+  # or remove "C:/Temp/" from the string above
+  editPath <- function(x, add = TRUE, path=NULL, backslash = FALSE){
+    if(add){
+      if(is.abs(x)){
+        warning("Path is already absolute. Nothing to add.")
+        return(x)
+      }
+      if(is.null(path)){
+        stop("Error in editPath: path must be specified")
+      }
+      if(backslash){
+        x <- paste(changeSlash(addSlash(path)),x,sep="")
+      } else {
+        x <- paste(addSlash(path),x,sep="")
+      }
+      return(x)
+    } else {
+      if(backslash){
+        x <- unlist(strsplit(x,"\\",fixed = TRUE))
+      } else {
+        x <- unlist(strsplit(x,"/",fixed = TRUE))
+      }
+      return(x[length(x)])
+    }
+  }
+
+
 
   # get information about R
   rscript <- paste(addSlash(Sys.getenv()["R_HOME"]),"bin/Rscript.exe",sep="")
@@ -76,6 +119,15 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
   }
 
   setwd(paste(wd,NBchar,sep=""))
+
+  # Add or remove path part of the respective input files
+  tempchek <- editPath(tempchek, add = TRUE, path = paste(wd,NBchar,sep=""))
+  pestgen <- editPath(pestgen, add = TRUE, path = paste(wd,NBchar,sep=""))
+  file_in <- editPath(file_in, add = TRUE, path = paste(wd,NBchar,sep=""))
+  file_out <- editPath(file_out, add = TRUE, path = paste(wd,NBchar,sep=""))
+  transferfile <- editPath(transferfile, add = TRUE, path = paste(wd,NBchar,sep=""))
+  placeholders <- editPath(placeholders, add = TRUE, path = paste(wd,NBchar,sep=""))
+  file_objfunc <- editPath(file_objfunc, add = TRUE, path = "output", backslash = TRUE)
 
   # if(updateparasofar){
   #   new <- read.table("input/best_para_sofar.txt",header=TRUE)
@@ -174,8 +226,8 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
              )
 
   # commands_factofile schreiben
-  writeLines(c(paste('factoval(file_in = ','"',wd,NBchar,'/PEST_Para.txt",',sep=""),
-             paste('file_out = "',wd,NBchar,'/input/PEST_Paraload.txt",',sep=""),
+  writeLines(c(paste('factoval(file_in = ','"',file_in,'",',sep=""),
+             paste('file_out = "',file_out,'",',sep=""),
              paste('transferfile = "',transferfile,'",',sep=""),
              paste("NB=",NB,",",sep=""),
              paste("upriverNB=c(",factofileNB,"))",sep="")),
@@ -204,7 +256,7 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
 
   PST[start_modelcommand+1] <- "COSERO_single_run.bat"
   PST[start_modelcommand+3] <- "in.tpl   PEST_Para.txt"
-  PST[start_modelcommand+4] <- "out.ins  output\\kge_nse.txt"
+  PST[start_modelcommand+4] <- paste("out.ins  ",file_objfunc,sep="")
 
   writeLines(PST,con=paste(wd,NBchar,"/cosero_subbasin",NB,".pst",sep=""))
 
