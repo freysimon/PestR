@@ -226,7 +226,8 @@ prepest <- function(NB, upriverNB=NA, wd = getwd(),
              )
 
   # commands_factofile schreiben
-  writeLines(c(paste('factoval(file_in = ','"',file_in,'",',sep=""),
+  writeLines(c("library(PestR)",
+             paste('factoval(file_in = ','"',file_in,'",',sep=""),
              paste('file_out = "',file_out,'",',sep=""),
              paste('transferfile = "',transferfile,'",',sep=""),
              paste("NB=",NB,",",sep=""),

@@ -15,7 +15,7 @@ factoval(file_in,file_out,transferfile,NB,upriverNB=NB)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{file_in}{
- A string pointing towards a file containing the fators
+ A string pointing towards a file containing the factors (that will be optimized by PEST)
 }
 \item{file_out}{
  A string pointing towards the outputfile
